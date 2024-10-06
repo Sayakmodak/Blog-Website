@@ -1,6 +1,7 @@
 import React from 'react'
+import "../styles/menuPage.css";
 
-const Home = () => {
+const Menu = () => {
     const post = [
         {
             id: 1,
@@ -22,23 +23,17 @@ const Home = () => {
         },
     ]
     return (
-        <>
+        <div className='sidebar'>
+            <h1>Other posts you many like</h1>
             {post.map((elm) => {
-                return <div className="post-container bg-[#f0f9fe] mb-14 border border-purple-500 flex items-center justify-center odd:flex-row-reverse p-4 text-black gap-[50px]" key={elm.id}>
-
-                    <div className='image'>
-                        <img src={elm.img} alt="image" className='h-72 w-64 border rounded-lg' />
-                    </div>
-
-                    <div className="content border border-blue-500 w-1/2 p-5">
-                        <h2 className='text-4xl font-bold'>{elm.title}</h2>
-                        <p className='mt-4 font-medium'>{elm.desc}</p>
-                        <span className='cursor-pointer relative top-[30px] px-[5px] py-[10px] border border-[#1f2937] '>Read More</span>
-                    </div>
+                return <div className='post' key={elm.id}>
+                    <img src={elm.img} alt="" />
+                    <h2>{elm.title}</h2>
+                    <button>Read More</button>
                 </div>
             })}
-        </>
+        </div>
     )
 }
 
-export default Home
+export default Menu
