@@ -1,5 +1,7 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+
 
 // REGISTER FUNCTION
 const register = (req, res)=>{
@@ -28,12 +30,40 @@ const register = (req, res)=>{
 
 // LOGIN FUNCTION
 const login = (req, res)=>{
-    
+    // CHECK THE USER 
+    db.query("SELECT * FROM users WHERE username = ?", [req.body.username], (err, data)=>{
+        if(err) return res.json(err);
+
+        if(data.length === 0){
+            return res.status(404).json("User not found!");
+        }
+
+        const password = data[0].password;
+        bcrypt.compare(req.body.password, password, function(err, result) {
+            if(err) return res.status(500).json({ message: "Error comparing passwords" });
+
+            if(!result){
+                return res.status(401).json({ message: "Invalid credentials" });
+            }
+
+            if(result){
+                const token = jwt.sign({id: data[0].id}, "privatekey", {expiresIn: '1d'});
+
+                const {password, ...other} = data[0];
+
+                res.cookie("acc_token", token);
+                return res.status(200).json({message: "Successfully Login", other});
+                // we should not send our token in frontend application, it is very confidential 
+            }
+        });
+    })
 }
 
 // LOGOUT FUNCTION
 const logout = (req, res)=>{
-    
+    res.clearCookie("acc_token", {sameSite:"none",
+        secure:true
+      }).status(200).json("User has been logged out.");
 }
 
 module.exports = {register, login, logout};
