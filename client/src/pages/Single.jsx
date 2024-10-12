@@ -1,35 +1,55 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import "../styles/singlePage.css";
 import sunset from "../assets/images/sunset.jpg";
 import user from "../assets/images/user.jpg";
 import remove from "../assets/images/delete.png";
 import pencil from "../assets/images/pencil.png";
 import Menu from '../comp/Menu';
+import axios from 'axios';
+import moment from 'moment';
+import { useLocation } from 'react-router-dom';
+import {AuthContext} from "../context/authContext";
 
 const Single = () => {
+    const {currentUser} = useContext(AuthContext);
+    const [post, setPost] = useState({});
+    console.log(post);
+    const id = useLocation().pathname.split("/")[2];
+
+
+    useEffect(()=>{
+        const fetchSinglePost = async ()=>{
+            const res = await axios.get(`http://localhost:3000/api/posts/${id}`);
+            console.log(res);
+            setPost(res);
+        }
+        fetchSinglePost();
+    }, [id]);
+
     return (
         <>
             <div className='container'>
 
                 <div className='content'>
                     <div className='image'>
-                        <img src={sunset} alt="" className='' />
+                        <img src={post?.img} alt="" className='' />
                     </div>
 
                     <div className="user">
-                        <img src={user} alt="user" />
+                        <img src={post.userImg} alt="user" />
                         <div className="info">
-                            <span>John Doe</span>
-                            <p>Posted 2 days ago</p>
+                            <span>{post.username}</span>
+                            <p>Posted {moment(post.date).fromNow()}</p>
                         </div>
-                        <div className="edit">
+
+                        {currentUser.username === post.username && <div className="edit">
                             <img src={pencil} alt="" />
                             <img src={remove} alt="" />
-                        </div>
+                        </div>}
                     </div>
                     <div className='blog'>
-                        <h1>Heading of the blog</h1>
-                        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum nemo voluptatibus quibusdam quod officia deleniti nam expedita rerum adipisci, optio cupiditate dolor, repudiandae natus accusamus nisi quam repellat totam? Delectus laborum rerum id aliquid ab nam ducimus reiciendis neque tempore. Facilis nobis quisquam non explicabo enim molestiae aperiam eum esse, aspernatur nemo est quaerat a nihil quia fugit. Minus commodi quasi temporibus optio sapiente aliquam magni ipsa. Fuga consequuntur odio quasi perspiciatis, distinctio reprehenderit possimus, sint vitae nesciunt dolorem necessitatibus rerum, sit laborum? Facilis earum corrupti quia debitis, accusantium ea illum, sunt vitae aspernatur, sed labore laboriosam quod magni perferendis.
+                        <h1>{post.title}</h1>
+                        {post.desc}
                     </div>
 
                 </div>

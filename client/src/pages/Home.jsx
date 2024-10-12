@@ -1,7 +1,19 @@
-import React from 'react'
-
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom';
+import axios from "axios";
 const Home = () => {
-    const post = [
+    const [post, setPost] = useState([]);
+    const cat = useLocation().search;
+    //console.log(cat); // ?cat=science
+    useEffect(()=>{
+        const fetchPosts = async ()=>{
+            const res = await axios.get(`http://localhost:3000/api/posts/${cat}`);
+            // console.log(res);
+            setPost(res.data);
+        }
+        fetchPosts();
+    }, [cat])
+    /*const post = [
         {
             id: 1,
             title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
@@ -20,7 +32,7 @@ const Home = () => {
             desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. A possimus excepturi aliquid nihil cumque ipsam facere aperiam at! Ea dolorem ratione sit debitis deserunt repellendus numquam ab vel perspiciatis corporis!",
             img: "https://images.pexels.com/photos/7008010/pexels-photo-7008010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
         },
-    ]
+    ]*/
     return (
         <>
             {post.map((elm) => {

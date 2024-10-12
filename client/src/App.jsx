@@ -39,7 +39,7 @@ function App() {
           element: <Write />,
         },
         {
-          path: "/single",
+          path: "/single/:id",
           index: true,
           element: <Single />,
         }
