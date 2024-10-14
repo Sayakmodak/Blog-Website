@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const jwt = require("jsonwebtoken");
 
 const getAllposts = (req, res)=>{
     const q = req.query.cat ? "SELECT * FROM posts WHERE cat = ?" : "SELECT * FROM posts";
@@ -9,7 +10,9 @@ const getAllposts = (req, res)=>{
     })
 }
 const getSinglepost = (req, res)=>{
-    const q = "SELECT p.id, p.uid, p.title, p.desc, p.img, p.cat p.date, u.img AS userImg, u.username FROM users u JOIN posts p ON p.uid = u.id WHERE p.id = ?";
+
+    const q = "select posts.id, posts.title, posts.desc, posts.img, posts.cat, posts.date, users.img AS userImg from posts join users on users.id = posts.uid where posts.id = ?";
+
     db.query(q, [req.params.id], (err, data)=>{
         if(err) return res.json(err);
 
@@ -24,7 +27,25 @@ const updatePost = (req, res)=>{
     
 }
 const deletePost = (req, res)=>{
-    
+    const token = req.cookies.acc_token;
+    console.log(token);
+
+    if(!token){
+        return res.status(401).json("token is provided");
+    }
+
+    jwt.verify(acc_token, "privatekey", (err, decoded)=>{
+        if(err){
+            return res.json("Token is not authenticated!");
+        }
+
+        const id = req.params.id;
+        db.query("DELETE FROM posts WHERE id = ? AND uid = ?", [id, decoded.id], (err, data)=>{
+            if(err) return res.status(403).json("Could not delete");
+
+            return res.status(200).json("Successfully Deleted!");
+        })
+    })
 }
 
 
