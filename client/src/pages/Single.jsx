@@ -1,22 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react'
 import "../styles/singlePage.css";
-import sunset from "../assets/images/sunset.jpg";
-import user from "../assets/images/user.jpg";
 import remove from "../assets/images/delete.png";
 import pencil from "../assets/images/pencil.png";
 import Menu from '../comp/Menu';
 import axios from 'axios';
 import moment from 'moment';
 import { useLocation } from 'react-router-dom';
-import { useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {AuthContext} from "../context/authContext";
+import { Link } from 'react-router-dom';
 
 const Single = () => {
-    const navigate = useNavigation();
+    const navigate = useNavigate();
     const {currentUser} = useContext(AuthContext);
     // console.log(currentUser);
     const [post, setPost] = useState({});
-    // console.log(post);
+    console.log(post);
     const path_id = useLocation().pathname.split("/")[2];
 
 
@@ -50,7 +49,9 @@ const Single = () => {
                         </div>
 
                         {currentUser.username === post.username && <div className="edit">
-                            <img src={pencil} alt="" />
+                            <Link to={`/write?edit=2`} state={post}>
+                                <img src={pencil} alt=""/>
+                            </Link>
                             <img src={remove} alt="" onClick={handleOnDelete}/>
                         </div>}
                     </div>
@@ -62,7 +63,7 @@ const Single = () => {
                 </div>
 
                 <div className="menu">
-                    <Menu />
+                    <Menu cat={post.cat}/>
                 </div>
             </div>
         </>

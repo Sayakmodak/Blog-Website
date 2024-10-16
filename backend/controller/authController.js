@@ -50,9 +50,9 @@ const login = (req, res)=>{
                 const token = jwt.sign({id: data[0].id}, "privatekey", {expiresIn: '1d'});
 
                 const {password, ...other} = data[0];
+                // res.cookie("token", token);
+                return res.cookie("token", token, {httpOnly: true,}).status(200).json({message: "Successfully Login", other});
 
-                res.cookie("acc_token", token);
-                return res.status(200).json({message: "Successfully Login", other});
                 // we should not send our token in frontend application, it is very confidential 
             }
         });
@@ -61,7 +61,7 @@ const login = (req, res)=>{
 
 // LOGOUT FUNCTION
 const logout = (req, res)=>{
-    res.clearCookie("acc_token", {sameSite:"none",
+    res.clearCookie("token", {sameSite:"none",
         secure:true
       }).status(200).json("User has been logged out.");
 }

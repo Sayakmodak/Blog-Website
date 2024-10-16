@@ -43,10 +43,9 @@ import './index.css'
 // ]);
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <AuthContexProvider>
     {/* <RouterProvider router={router} /> */}
     <App />
     </AuthContexProvider>
-  </StrictMode>,
 )

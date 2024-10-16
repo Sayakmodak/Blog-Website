@@ -21,20 +21,75 @@ const getSinglepost = (req, res)=>{
 }
 
 const addPost = (req, res)=>{
+    const token = req.cookies.token;
+    console.log("token is", token);
+
+    if(!token){
+        return res.status(401).json("token is not provided");
+    }
     
+    jwt.verify(token, "privatekey", (err, decoded)=>{
+        if(err){
+            return res.json("Token is not authenticated!");
+    }
+
+    const q = "INSERT INTO posts (title, desc, img, date, cat, uid) VALUES (?)";
+    values = [
+        req.body.title,
+        req.body.desc,
+        req.body.img,
+        req.body.date,
+        req.body.cat,
+        decoded.id
+    ]
+
+    db.query(q, [values], (err, data)=>{
+        if(err) return res.json(err);
+
+        return res.json("Data has been updated");
+    })
+})
 }
+
 const updatePost = (req, res)=>{
-    
-}
-const deletePost = (req, res)=>{
-    const token = req.cookies.acc_token;
+    const token = req.cookies.token;
     console.log(token);
 
     if(!token){
-        return res.status(401).json("token is provided");
+        return res.status(401).json("token is not provided");
+    }
+    jwt.verify(token, "privatekey", (err, decoded)=>{
+        if(err){
+            return res.json("Token is not authenticated!");
     }
 
-    jwt.verify(acc_token, "privatekey", (err, decoded)=>{
+    const q = "UPDATE posts SET (title=?, desc=?, img?=, cat?=) VALUES (?) WHERE id=? AND uid=?";
+    values = [
+        req.body.title,
+        req.body.desc,
+        req.body.img,
+        req.body.cat,
+    ]
+
+    db.query(q, [...values, req.params.id, decoded.id], (err, data)=>{
+        if(err) return res.json(err);
+
+        return res.status(200).json("Post has been added");
+    })
+})
+}
+
+
+const deletePost = (req, res)=>{
+    const token = req.cookies;
+    // req.cookies.username
+    console.log(token);
+
+    if(!token){
+        return res.status(401).json("token is not provided");
+    }
+
+    jwt.verify(token, "privatekey", (err, decoded)=>{
         if(err){
             return res.json("Token is not authenticated!");
         }

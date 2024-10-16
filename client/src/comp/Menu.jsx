@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "../styles/menuPage.css";
+import axios from 'axios';
 
-const Menu = () => {
-    const post = [
+const Menu = ({cat}) => {
+    const [post, setPost] = useState([]);
+    // console.log(cat);
+    console.log(post);
+    useEffect((elm)=>{
+        const fetchRecommendedPosts = async ()=>{
+            const res = await axios.get(`http://localhost:3000/api/posts/?cat=${cat}`);
+            console.log(res);
+            setPost(res.data);
+        }
+        fetchRecommendedPosts();
+    }, [cat])
+
+
+
+    /*const post = [
         {
             id: 1,
             title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
@@ -21,7 +36,7 @@ const Menu = () => {
             desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. A possimus excepturi aliquid nihil cumque ipsam facere aperiam at! Ea dolorem ratione sit debitis deserunt repellendus numquam ab vel perspiciatis corporis!",
             img: "https://images.pexels.com/photos/7008010/pexels-photo-7008010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
         },
-    ]
+    ]*/
     return (
         <div className='sidebar'>
             <h1>Other posts you many like</h1>
