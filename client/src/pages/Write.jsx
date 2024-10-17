@@ -3,19 +3,36 @@ import "../styles/writePage.css";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useState } from 'react';
+import { useRef } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import moment from "moment";
+import JoditEditor from 'jodit-react';
 
 const Update = () => {
+    axios.defaults.withCredentials = true;
+    const navigate = useNavigate();
     const state = useLocation().state;  // to reach that state of single page
     console.log(state);
+    const editor = useRef(null);
     const [value, setValue] = useState(state?.desc || ''); // desc
-    const [title, setTitle] = useState(state?.title ||"");
-    const [cat, setCat] = useState(state?.cat ||"");
+    const [title, setTitle] = useState(state?.title || "");
+    const [cat, setCat] = useState(state?.cat || "");
     const [file, setFile] = useState(null);
 
+
+    
+
+    const config = {
+        buttons: ["bold", "italic", "underline"],
+        placeholder : "Start typing..."
+    }
+
+    // console.log(config);
     const upload = async ()=>{
+        if (!file) {
+            return; // Exit if no file is selected
+        }
         const formData = new FormData();
         formData.append("file", file);
         const res = await axios.post("http://localhost:3000/api/upload", formData);
@@ -25,22 +42,24 @@ const Update = () => {
 
     const handleOnPublish = async (e)=>{
         e.preventDefault();
-        await upload();
         const imgUrl = await upload();
         // if(state) update method otherwise add method
         try {
+            console.log("Entering");
             state ? await axios.put(`http://localhost:3000/api/posts/${state.id}`, {
                 title,
                 desc: value,
                 img: file ? imgUrl : "",
-                cat
-            }) : await axios.post("http://localhost:3000/api/posts/", {
+                cat,
+            }) : await axios.post("http://localhost:3000/api/posts", {
                 title,
                 desc: value,
                 cat,
                 img: file ? imgUrl : "",
                 date: moment(Date.now()).format("YY:MM:DD HH-mm-ss")
             });
+            console.log("Successfully Inserted")
+            navigate("/");
         } catch (error) {
             console.log(error);
         }
@@ -52,7 +71,15 @@ const Update = () => {
             <div className="content">
                 <input type="text" placeholder='Title' value={title} name='title' onChange={(e)=> setTitle(e.target.value)}/>
                 <div className="editorContainer">
-                    <ReactQuill className='editor' theme="snow" value={value} onChange={setValue} />
+                    {/* <ReactQuill className='editor' ref={editor} theme="snow" value={value} onChange={setValue} /> */}
+
+                    <JoditEditor
+			        ref={editor}
+			        value={value}
+                    tabIndex={1}
+                    name="desc"
+                    onChange={(newContent)=> setValue(newContent)}
+		            />
                 </div>
             </div>
 
@@ -65,7 +92,7 @@ const Update = () => {
                     <span>
                         <b>Status: </b> Public
                     </span>
-                    <input style={{ display: "none" }} type="file" name="file" id="file" onChange={e=> setFile(e.target.files[0])}/>
+                    <input style={{ display: "none" }} type="file" name="img" id="file" onChange={e=> setFile(e.target.files[0])}/>
 
                     <label className='file' htmlFor="file">Upload Image</label>
                     <div className="buttons">
@@ -89,7 +116,7 @@ const Update = () => {
                         <label htmlFor="cinema">Cinema</label></div>
                 </div>
             </div>
-
+            {console.log(title, value, cat)}
         </div>
     )
 }

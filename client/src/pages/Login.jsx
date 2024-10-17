@@ -4,6 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/authContext';
 const Login = () => {
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
     const {login} = useContext(AuthContext);
 
     const [value, setValue] = useState({

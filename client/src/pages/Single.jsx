@@ -12,10 +12,12 @@ import { Link } from 'react-router-dom';
 
 const Single = () => {
     const navigate = useNavigate();
+    axios.defaults.withCredentials = true;
     const {currentUser} = useContext(AuthContext);
     // console.log(currentUser);
+    // console.log(currentUser.other.username);
     const [post, setPost] = useState({});
-    console.log(post);
+    // console.log(post);
     const path_id = useLocation().pathname.split("/")[2];
 
 
@@ -28,17 +30,26 @@ const Single = () => {
         fetchSinglePost();
     }, [path_id]);
 
-    const handleOnDelete = async()=>{
-        await axios.delete(`http://localhost:3000/api/posts/${path_id}`);
-        navigate("/");
+    const handleOnDelete = async ()=>{
+        try {
+            await axios.delete(`http://localhost:3000/api/posts/${path_id}`);
+            navigate("/");
+        } catch (error) {
+            console.log(error)
+        }
     }
+    const getText = (html) =>{
+        const doc = new DOMParser().parseFromString(html, "text/html")
+        return doc.body.textContent
+    }
+
     return (
         <>
             <div className='container'>
 
                 <div className='content'>
                     <div className='image'>
-                        <img src={post?.img} alt="" className='' />
+                        <img src={`../uploads/${post?.img}`} alt="" className='' />
                     </div>
 
                     <div className="user">
@@ -48,7 +59,7 @@ const Single = () => {
                             <p>Posted {moment(post.date).fromNow()}</p>
                         </div>
 
-                        {currentUser.username === post.username && <div className="edit">
+                        {currentUser.other.username === post.username && <div className="edit">
                             <Link to={`/write?edit=2`} state={post}>
                                 <img src={pencil} alt=""/>
                             </Link>
@@ -57,7 +68,7 @@ const Single = () => {
                     </div>
                     <div className='blog'>
                         <h1>{post.title}</h1>
-                        {post.desc}
+                        {getText(post.desc)}
                     </div>
 
                 </div>

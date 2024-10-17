@@ -9,10 +9,15 @@ const usersRoutes = require("./routes/usersRoutes");
 const app = express();
 
 dotenv.config();
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',  // Your frontend's URL
+  // methods: ['GET', 'POST', 'DELETE', 'PUT'],
+  credentials: true,  // Allow cookies to be sent
+}));
 
 
 
