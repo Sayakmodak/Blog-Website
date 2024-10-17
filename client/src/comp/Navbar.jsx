@@ -14,7 +14,7 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-                <div className="menu flex justify-between gap-5">
+                <div className="menu flex justify-between items-center gap-5">
                     <Link to="/?cat=science">
                         <p>Science</p>
                     </Link>
@@ -34,7 +34,7 @@ const Navbar = () => {
                     }
                     
                     <Link to="/write">
-                        <button className='bg-cyan-700 px-5 border rounded-md hover:bg-transparent'>Write</button>
+                        <button className='bg-cyan-700 p-[5px] border rounded-[50%] hover:bg-transparent '>Write</button>
                     </Link>
                 </div>
             </nav>

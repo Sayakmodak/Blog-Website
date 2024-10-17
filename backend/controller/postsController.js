@@ -52,7 +52,7 @@ const addPost = (req, res)=>{
 }
 
 const updatePost = (req, res)=>{
-    // const token = req.cookies.token;
+    const token = req.cookies.token;
     // console.log(token);
 
     if(!token){
@@ -71,7 +71,7 @@ const updatePost = (req, res)=>{
         req.body.cat,
     ]
 
-    // const id = (req.params.id);
+    const id = (req.params.id);
     // console.log(id, decoded.id);
 
     db.query(q, [...values, id, decoded.id], (err, data)=>{
@@ -85,7 +85,7 @@ const updatePost = (req, res)=>{
 
 
 const deletePost = (req, res)=>{
-    // const token = req.cookies.token;
+    const token = req.cookies.token;
     // console.log("Token is ", token);
 
     if(!token){
