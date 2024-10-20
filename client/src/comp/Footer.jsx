@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Footer = () => {
     return (
         <>
-            <div className='border p-4 flex items-center justify-between bg-[#1f2937] text-white mt-14'>
+            <div className='border py-[1rem] px-[9rem] flex items-center justify-between bg-[#1f2937] text-white mt-14'>
                 <div className="image">
                     <Link to="/">
                     <img src={Logo} alt="logo" />

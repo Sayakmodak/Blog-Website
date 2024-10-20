@@ -7,7 +7,7 @@ const Navbar = () => {
     // console.log(currentUser.other.username);
     return (
         <>
-            <nav className='border p-4 flex items-center justify-between bg-[#1f2937] text-white'>
+            <nav className='border py-[1rem] px-[9rem] flex items-center justify-between bg-[#1f2937] text-white'>
                 <div className="profile">
                     <Link to="/">
                         <img src={Logo} alt="logo" />

@@ -22,7 +22,7 @@ const Update = () => {
 
 
     
-
+    console.log(value);
     const config = {
         buttons: ["bold", "italic", "underline"],
         placeholder : "Start typing..."
@@ -116,7 +116,7 @@ const Update = () => {
                         <label htmlFor="cinema">Cinema</label></div>
                 </div>
             </div>
-            {console.log(title, value, cat)}
+            {console.log(value)}
         </div>
     )
 }

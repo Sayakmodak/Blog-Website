@@ -43,12 +43,13 @@ const Home = () => {
     return (
         <>
             {post.map((elm) => {
-                return <div className="post-container bg-[#f0f9fe] mb-14 border border-purple-500 flex items-center justify-center odd:flex-row-reverse p-4 text-black gap-[50px]" key={elm.id}>
+                return <div className="post-container bg-[#f0f9fe] mb-14 mt-[0.5rem] border-purple-500 flex items-center justify-center odd:flex-row-reverse p-4 text-black gap-[50px]" key={elm.id}>
                     <div className='image'>
-                        <img src={`../uploads/${elm.img}`} alt="image" className='h-72 w-64 border rounded-lg' />
+                    <Link to={`/post/${elm.id}`}>
+                    <img src={`../uploads/${elm.img}`} alt="image" className='h-72 w-64 border rounded-lg' /></Link>
                     </div>
 
-                    <div className="content border border-blue-500 w-1/2 p-5">
+                    <div className="content  border-blue-500 w-1/2 p-5">
                     <Link to={`/post/${elm.id}`}>
                     <h2 className='text-4xl font-bold'>{elm.title}</h2>
                     </Link>

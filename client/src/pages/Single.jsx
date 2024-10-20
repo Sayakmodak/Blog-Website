@@ -38,9 +38,10 @@ const Single = () => {
             console.log(error)
         }
     }
+
     const getText = (html) =>{
         const doc = new DOMParser().parseFromString(html, "text/html")
-        return doc.body.textContent
+        return doc.body.textContent;
     }
 
     return (
